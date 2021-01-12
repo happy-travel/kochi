@@ -11,23 +11,21 @@ namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options, Func<HttpRequestMessage, bool> filter)
+        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options, Func<HttpRequestMessage, bool> loggingCondition)
         {
             _clientFactory = clientFactory;
             _options = options.Value;
-            _filter = filter;
+            _loggingCondition = loggingCondition;
         }
         
         
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return _filter(request) 
-                ? SendWithLogAsync(request, cancellationToken)
+            => _loggingCondition(request) 
+                ? SendWithLog(request, cancellationToken)
                 : base.SendAsync(request, cancellationToken);
-        }
 
 
-        private async Task<HttpResponseMessage> SendWithLogAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        private async Task<HttpResponseMessage> SendWithLog(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var logEntry = new HttpRequestAuditLogEntry
             {
@@ -63,16 +61,16 @@ namespace HappyTravel.SupplierRequestLogger
         }
 
 
-        private async Task Send(HttpRequestAuditLogEntry logEntry)
+        private Task Send(HttpRequestAuditLogEntry logEntry)
         {
             using var client = _clientFactory.CreateClient();
             var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
-            await client.PostAsync(_options.Endpoint, content);
+            return client.PostAsync(_options.Endpoint, content);
         }
 
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly RequestLoggerOptions _options;
-        private readonly Func<HttpRequestMessage, bool> _filter;
+        private readonly Func<HttpRequestMessage, bool> _loggingCondition;
     }
 }

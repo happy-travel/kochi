@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace HappyTravel.SupplierRequestLogger
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public record HttpRequestAuditLogEntry
     {
         public string Url { get; init; }

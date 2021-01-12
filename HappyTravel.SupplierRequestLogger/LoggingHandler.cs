@@ -11,7 +11,7 @@ namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<SenderOptions> options)
+        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options)
         {
             _clientFactory = clientFactory;
             _options = options.Value;
@@ -63,6 +63,6 @@ namespace HappyTravel.SupplierRequestLogger
 
 
         private readonly IHttpClientFactory _clientFactory;
-        private readonly SenderOptions _options;
+        private readonly RequestLoggerOptions _options;
     }
 }

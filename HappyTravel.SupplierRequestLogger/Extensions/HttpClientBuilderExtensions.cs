@@ -7,7 +7,7 @@ namespace HappyTravel.SupplierRequestLogger.Extensions
         public static void AddHttpRequestLoggingHandler(this IHttpClientBuilder builder)
         {
             builder.Services.AddTransient<LoggingHandler>();
-            builder.Services.AddOptions<SenderOptions>();
+            builder.Services.AddOptions<RequestLoggerOptions>();
             builder.AddHttpMessageHandler<LoggingHandler>();
         }
     }

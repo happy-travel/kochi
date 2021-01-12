@@ -3,7 +3,7 @@
 namespace HappyTravel.SupplierRequestLogger
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public class SenderOptions
+    public class RequestLoggerOptions
     {
         public string Endpoint { get; set; } = string.Empty;
     }

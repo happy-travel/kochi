@@ -21,9 +21,9 @@ namespace HappyTravel.SupplierRequestLogger
         
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return !_filter(request) 
-                ? base.SendAsync(request, cancellationToken) 
-                : SendWithLogAsync(request, cancellationToken);
+            return _filter(request) 
+                ? SendWithLogAsync(request, cancellationToken)
+                : base.SendAsync(request, cancellationToken);
         }
 
 

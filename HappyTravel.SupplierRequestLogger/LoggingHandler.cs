@@ -11,16 +11,25 @@ namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options)
+        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options, Func<HttpRequestMessage, bool> filter)
         {
             _clientFactory = clientFactory;
             _options = options.Value;
+            _filter = filter;
         }
         
         
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var auditLog = new HttpRequestAuditLogEntry
+            return !_filter(request) 
+                ? base.SendAsync(request, cancellationToken) 
+                : SendWithLogAsync(request, cancellationToken);
+        }
+
+
+        private async Task<HttpResponseMessage> SendWithLogAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var logEntry = new HttpRequestAuditLogEntry
             {
                 Url = request.RequestUri?.AbsoluteUri ?? string.Empty,
                 RequestHeaders = request.Headers.ToDictionary(),
@@ -31,24 +40,24 @@ namespace HappyTravel.SupplierRequestLogger
             {
                 var response = await base.SendAsync(request, cancellationToken);
 
-                auditLog = auditLog with
+                logEntry = logEntry with
                 {
                     ResponseHeaders = response.Headers.ToDictionary(),
                     ResponseBody = await response.Content.ReadAsStringAsync(cancellationToken),
                     StatusCode = (int) response.StatusCode
                 };
                 
-                await Send(auditLog);
+                await Send(logEntry);
                 return response;
             }
             catch (Exception e)
             {
-                auditLog = auditLog with
+                logEntry = logEntry with
                 {
                     Error = e.Message
                 };
                 
-                await Send(auditLog);
+                await Send(logEntry);
                 throw;
             }
         }
@@ -64,5 +73,6 @@ namespace HappyTravel.SupplierRequestLogger
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly RequestLoggerOptions _options;
+        private readonly Func<HttpRequestMessage, bool> _filter;
     }
 }

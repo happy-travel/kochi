@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace HappyTravel.SupplierRequestLogger.Extensions
 {
     public static class HttpClientBuilderExtensions
     {
-        public static void AddHttpRequestLoggingHandler(this IHttpClientBuilder builder, Func<HttpRequestMessage, bool> loggingCondition)
+        public static void AddHttpRequestLoggingHandler(this IHttpClientBuilder builder, Action<RequestLoggerOptions> options)
         {
-            builder.Services.AddOptions<RequestLoggerOptions>();
-            builder.Services.AddTransient(provider 
-                => new LoggingHandler(
-                    provider.GetRequiredService<IHttpClientFactory>(), 
-                    provider.GetRequiredService<IOptions<RequestLoggerOptions>>(),
-                    loggingCondition)
-            );
+            builder.Services.ConfigureAndValidate(options);
+            builder.Services.AddTransient<LoggingHandler>();
             builder.AddHttpMessageHandler<LoggingHandler>();
         }
     }

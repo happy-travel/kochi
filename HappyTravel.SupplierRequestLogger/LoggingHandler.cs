@@ -11,18 +11,19 @@ namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options, Func<HttpRequestMessage, bool> loggingCondition)
+        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options)
         {
             _clientFactory = clientFactory;
             _options = options.Value;
-            _loggingCondition = loggingCondition;
         }
-        
-        
+
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-            => _loggingCondition(request) 
+        {
+            return _options.LoggingCondition == null || _options.LoggingCondition(request)
                 ? SendWithLog(request, cancellationToken)
                 : base.SendAsync(request, cancellationToken);
+        }
 
 
         private async Task<HttpResponseMessage> SendWithLog(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -71,6 +72,5 @@ namespace HappyTravel.SupplierRequestLogger
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly RequestLoggerOptions _options;
-        private readonly Func<HttpRequestMessage, bool> _loggingCondition;
     }
 }

@@ -66,6 +66,12 @@ namespace HappyTravel.SupplierRequestLogger
 
         private async Task Send(HttpRequestAuditLogEntry logEntry)
         {
+            if (string.IsNullOrEmpty(_options.Endpoint))
+            {
+                _logger.LogCritical("Request logger endpoint is not set");
+                return;
+            }
+            
             using var client = _clientFactory.CreateClient();
             var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
             try

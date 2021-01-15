@@ -3,12 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>1.0.2</Version>
+        <Version>1.0.3</Version>
         <Authors>Denis Nikolaev</Authors>
         <Description>Logger requests to suppliers in ElasticSearch</Description>
         <PackageProjectUrl>https://github.com/happy-travel/kochi</PackageProjectUrl>
         <RepositoryURL>https://github.com/happy-travel/kochi</RepositoryURL>
-        <PackageReleaseNotes>Fixed TargetInvocationException</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed wrong RequestBody value</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

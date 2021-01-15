@@ -5,15 +5,17 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using HappyTravel.SupplierRequestLogger.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, IOptions<RequestLoggerOptions> options)
+        public LoggingHandler(IHttpClientFactory clientFactory, ILogger<LoggingHandler> logger, IOptions<RequestLoggerOptions> options)
         {
             _clientFactory = clientFactory;
+            _logger = logger;
             _options = options.Value;
         }
 
@@ -62,15 +64,23 @@ namespace HappyTravel.SupplierRequestLogger
         }
 
 
-        private Task Send(HttpRequestAuditLogEntry logEntry)
+        private async Task Send(HttpRequestAuditLogEntry logEntry)
         {
             using var client = _clientFactory.CreateClient();
             var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
-            return client.PostAsync(_options.Endpoint, content);
+            try
+            {
+                await client.PostAsync(_options.Endpoint, content);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sending audit logs failed");
+            }
         }
 
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly RequestLoggerOptions _options;
+        private readonly ILogger<LoggingHandler> _logger;
     }
 }

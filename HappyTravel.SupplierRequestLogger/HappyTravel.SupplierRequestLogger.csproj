@@ -3,15 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <LangVersion>default</LangVersion>
-        <Copyright>HappyTravel.com</Copyright>
-        <Authors>Happytravel.com</Authors>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.1</Version>
+        <Authors>Denis Nikolaev</Authors>
         <Description>Logger requests to suppliers in ElasticSearch</Description>
-        <PackageReleaseNotes>Released library</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/happy-travel/kochi</PackageProjectUrl>
         <RepositoryURL>https://github.com/happy-travel/kochi</RepositoryURL>
-        <Version>1.0.0</Version>        
+        <PackageReleaseNotes>Fixed TaskCancelledException</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

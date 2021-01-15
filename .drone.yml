@@ -4,7 +4,7 @@ name: Nuget packages
         
 trigger:
   branch:
-    - master
+    - main
   event:
     - push
     
@@ -38,7 +38,7 @@ name: Nuget packages test
 
 trigger:
   branch:
-    - master
+    - main
   event:
     include:
       - pull_request

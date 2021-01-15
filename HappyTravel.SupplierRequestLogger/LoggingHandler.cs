@@ -66,7 +66,14 @@ namespace HappyTravel.SupplierRequestLogger
         {
             using var client = _clientFactory.CreateClient();
             var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
-            return client.PostAsync(_options.Endpoint, content);
+            try
+            {
+                return client.PostAsync(_options.Endpoint, content);
+            }
+            catch (Exception)
+            {
+                return Task.CompletedTask;
+            }
         }
 
 

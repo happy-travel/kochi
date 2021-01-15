@@ -30,11 +30,15 @@ namespace HappyTravel.SupplierRequestLogger
 
         private async Task<HttpResponseMessage> SendWithLog(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            var requestBody = request.Content is not null
+                ? await request.Content.ReadAsStringAsync(cancellationToken)
+                : null;
+            
             var logEntry = new HttpRequestAuditLogEntry
             {
                 Url = request.RequestUri?.AbsoluteUri ?? string.Empty,
                 RequestHeaders = request.Headers.ToDictionary(),
-                RequestBody = request.Content?.ToString()
+                RequestBody = requestBody
             };
 
             try

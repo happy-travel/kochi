@@ -3,18 +3,17 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <Authors>Denis Nikolaev</Authors>
         <Description>Logger requests to suppliers in ElasticSearch</Description>
         <PackageProjectUrl>https://github.com/happy-travel/kochi</PackageProjectUrl>
         <RepositoryURL>https://github.com/happy-travel/kochi</RepositoryURL>
-        <PackageReleaseNotes>Fixed TaskCancelledException</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed TargetInvocationException</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-      <PackageReference Include="ReHackt.Extensions.Options.Validation" Version="5.0.0" />
     </ItemGroup>
 
 </Project>

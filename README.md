@@ -1,5 +1,12 @@
 # kochi
-Library adds the ability to log HTTP requests and responses
+Client for Fukuoka logging service.
+
+## Description
+Client integrated to HttpClient as a handler and sends logs to Fukuoka.
+
+### Options
+- Endpoint - required option, specifies where to send logs.
+- LoggingCondition - this option allows to logs only the necessary requests. If not set logs all requests
 
 ## Usage
 Add request logger to your http client
@@ -8,11 +15,14 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        # Read Fukuoka options from Vault
         var fukuokaOptions = vaultClient.Get(Configuration["Fukuoka:Options"]).GetAwaiter().GetResult(); 
         services.AddHttpClient("ClientName")
             .AddHttpRequestLoggingHandler(options =>
             {
+                # Set Fukuoka endpoint for client
                 options.Endpoint = fukuokaOptions["endpoint"];
+                # Log only requests which RequestBody contains HotelBookingRequest
                 options.LoggingCondition = request =>
                 {
                     var content = request.Content?.ReadAsStringAsync().GetAwaiter().GetResult();
@@ -23,7 +33,7 @@ public class Startup
     }
 }
 ```
-Add settings to appsettings.json
+Add settings to appsettings.json for getting Fukuoka options from Vault
 ```json
 {
   "Fukuoka": {
@@ -31,10 +41,9 @@ Add settings to appsettings.json
   }
 }
 ```
-Add access to "fukuoka/options" in vault policy. Open "Policies" in Vault UI and add
+Add access to "fukuoka/options" in Vault policy. Open "Policies" in Vault UI and add
 ```hcl
 path "secrets/data/fukuoka/options" {
   capabilities = [ "read" ]
 }
 ```
-

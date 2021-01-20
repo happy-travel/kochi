@@ -3,6 +3,7 @@ Client for Fukuoka logging service.
 
 ## Description
 Client integrated to HttpClient as a handler and sends logs to Fukuoka.
+Errors that occur are logged using project ILogger
 
 ### Options
 - Endpoint - required option, specifies where to send logs.

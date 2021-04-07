@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>1.1</Version>
+        <Version>1.1.0</Version>
         <Authors>Denis Nikolaev</Authors>
         <Description>Logger requests to suppliers in ElasticSearch</Description>
         <PackageProjectUrl>https://github.com/happy-travel/kochi</PackageProjectUrl>

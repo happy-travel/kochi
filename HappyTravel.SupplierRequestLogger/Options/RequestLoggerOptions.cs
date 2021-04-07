@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 
-namespace HappyTravel.SupplierRequestLogger
+namespace HappyTravel.SupplierRequestLogger.Options
 {
     public class RequestLoggerOptions
     {

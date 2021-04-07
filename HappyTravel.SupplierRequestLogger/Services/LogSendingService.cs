@@ -34,7 +34,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
                 .Handle<Exception>()
                 .RetryForeverAsync(exception =>
                 {
-                    _logger.LogCritical(exception, "Error when sending log entry to Fukuoka");
+                    _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka");
                 });
 
             while (await _channel.WaitToReadAsync(cancellationToken))

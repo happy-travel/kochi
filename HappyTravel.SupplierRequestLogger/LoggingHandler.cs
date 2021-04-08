@@ -51,7 +51,7 @@ namespace HappyTravel.SupplierRequestLogger
                     StatusCode = (int) response.StatusCode
                 };
                 
-                // write to the channel so as not to lose the message
+                // Write to the channel so as not to lose the message
                 await _channel.WriteAsync(logEntry, cancellationToken);
                 return response;
             }

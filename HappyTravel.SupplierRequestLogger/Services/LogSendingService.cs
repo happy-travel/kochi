@@ -26,18 +26,12 @@ namespace HappyTravel.SupplierRequestLogger.Services
             _httpClientFactory = httpClientFactory;
             _options = options.Value;
             _logger = logger;
-            _policy = Policy
-                .Handle<Exception>()
-                .WaitAndRetryForeverAsync(
-                    _ => TimeSpan.FromSeconds(Delay),
-                    (exception, _) => _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka")
-                );
         }
         
         
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            // use the channel as a buffer so as not to lose messages
+            // Use the channel as a buffer so as not to lose messages
             while (await _channel.WaitToReadAsync(cancellationToken))
             {
                 while (_channel.TryRead(out var logEntry))
@@ -45,7 +39,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
                     using var client = _httpClientFactory.CreateClient();
                     var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
                     
-                    await _policy.ExecuteAsync(async () =>
+                    await GetPolicy().ExecuteAsync(async () =>
                     {
                         var result = await client.PostAsync(_options.Endpoint, content, cancellationToken);
                         result.EnsureSuccessStatusCode();
@@ -53,9 +47,18 @@ namespace HappyTravel.SupplierRequestLogger.Services
                 }
             }
         }
+        
+        
+        private AsyncRetryPolicy GetPolicy()
+            => Policy
+                .Handle<Exception>()
+                .WaitAndRetryForeverAsync(
+                    _ => TimeSpan.FromSeconds(DelayInSeconds),
+                    (exception, _) => _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka")
+                    );
+        
 
-        private const int Delay = 5;
-        private readonly AsyncRetryPolicy _policy;
+        private const int DelayInSeconds = 5;
 
         
         private readonly ChannelReader<RequestLoggerOptions> _channel;

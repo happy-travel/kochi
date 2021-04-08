@@ -32,10 +32,10 @@ namespace HappyTravel.SupplierRequestLogger.Services
         {
             var policy = Policy
                 .Handle<Exception>()
-                .RetryForeverAsync(exception =>
-                {
-                    _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka");
-                });
+                .WaitAndRetryForeverAsync(
+                    _ => TimeSpan.FromSeconds(Delay),
+                    (exception, _) => _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka")
+                );
 
             while (await _channel.WaitToReadAsync(cancellationToken))
             {
@@ -45,11 +45,14 @@ namespace HappyTravel.SupplierRequestLogger.Services
                     {
                         using var client = _httpClientFactory.CreateClient();
                         var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
-                        await client.PostAsync(_options.Endpoint, content, cancellationToken);
+                        var result = await client.PostAsync(_options.Endpoint, content, cancellationToken);
+                        result.EnsureSuccessStatusCode();
                     });
                 }
             }
         }
+
+        private const int Delay = 5;
 
         
         private readonly ChannelReader<RequestLoggerOptions> _channel;

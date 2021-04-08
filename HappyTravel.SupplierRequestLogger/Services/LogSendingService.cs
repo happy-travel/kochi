@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
+using Polly.Retry;
 
 namespace HappyTravel.SupplierRequestLogger.Services
 {
@@ -25,26 +26,27 @@ namespace HappyTravel.SupplierRequestLogger.Services
             _httpClientFactory = httpClientFactory;
             _options = options.Value;
             _logger = logger;
-        }
-        
-        
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            var policy = Policy
+            _policy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryForeverAsync(
                     _ => TimeSpan.FromSeconds(Delay),
                     (exception, _) => _logger.LogCritical(exception, "Error when sending a log entry to Fukuoka")
                 );
-
+        }
+        
+        
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        {
+            // use the channel as a buffer so as not to lose messages
             while (await _channel.WaitToReadAsync(cancellationToken))
             {
                 while (_channel.TryRead(out var logEntry))
                 {
-                    await policy.ExecuteAsync(async () =>
+                    using var client = _httpClientFactory.CreateClient();
+                    var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
+                    
+                    await _policy.ExecuteAsync(async () =>
                     {
-                        using var client = _httpClientFactory.CreateClient();
-                        var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
                         var result = await client.PostAsync(_options.Endpoint, content, cancellationToken);
                         result.EnsureSuccessStatusCode();
                     });
@@ -53,6 +55,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
         }
 
         private const int Delay = 5;
+        private readonly AsyncRetryPolicy _policy;
 
         
         private readonly ChannelReader<RequestLoggerOptions> _channel;

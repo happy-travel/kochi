@@ -6,8 +6,8 @@
         <Version>1.1.0</Version>
         <Authors>Denis Nikolaev</Authors>
         <Description>Logger requests to suppliers in ElasticSearch</Description>
-        <PackageProjectUrl>https://github.com/happy-travel/kochi</PackageProjectUrl>
-        <RepositoryURL>https://github.com/happy-travel/kochi</RepositoryURL>
+        <PackageProjectUrl>https://github.com/happy-travel/supplier-request-logger</PackageProjectUrl>
+        <RepositoryURL>https://github.com/happy-travel/supplier-request-logger</RepositoryURL>
         <PackageReleaseNotes>Fixed wrong RequestBody value</PackageReleaseNotes>
     </PropertyGroup>
 

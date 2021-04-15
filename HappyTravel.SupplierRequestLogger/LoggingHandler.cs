@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using HappyTravel.SupplierRequestLogger.Extensions;
-using Microsoft.Extensions.Logging;
+using HappyTravel.SupplierRequestLogger.Models;
+using HappyTravel.SupplierRequestLogger.Options;
 using Microsoft.Extensions.Options;
 
 namespace HappyTravel.SupplierRequestLogger
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(IHttpClientFactory clientFactory, ILogger<LoggingHandler> logger, IOptions<RequestLoggerOptions> options)
+        public LoggingHandler(ChannelWriter<HttpRequestAuditLogEntry> channel, IOptions<RequestLoggerOptions> options)
         {
-            _clientFactory = clientFactory;
-            _logger = logger;
+            _channel = channel;
             _options = options.Value;
         }
 
@@ -52,7 +51,8 @@ namespace HappyTravel.SupplierRequestLogger
                     StatusCode = (int) response.StatusCode
                 };
                 
-                await Send(logEntry);
+                // Write to the channel so as not to lose the message
+                await _channel.WriteAsync(logEntry, cancellationToken);
                 return response;
             }
             catch (Exception e)
@@ -62,35 +62,13 @@ namespace HappyTravel.SupplierRequestLogger
                     Error = e.Message
                 };
                 
-                await Send(logEntry);
+                await _channel.WriteAsync(logEntry, cancellationToken);
                 throw;
             }
         }
 
 
-        private async Task Send(HttpRequestAuditLogEntry logEntry)
-        {
-            if (string.IsNullOrEmpty(_options.Endpoint))
-            {
-                _logger.LogCritical("Request logger endpoint is not set");
-                return;
-            }
-            
-            using var client = _clientFactory.CreateClient();
-            var content = new StringContent(JsonSerializer.Serialize(logEntry), Encoding.UTF8, "application/json");
-            try
-            {
-                await client.PostAsync(_options.Endpoint, content);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Sending audit logs failed");
-            }
-        }
-
-
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly ChannelWriter<HttpRequestAuditLogEntry> _channel;
         private readonly RequestLoggerOptions _options;
-        private readonly ILogger<LoggingHandler> _logger;
     }
 }

@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using HappyTravel.SupplierRequestLogger.Models;
 using HappyTravel.SupplierRequestLogger.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
     public class LogSendingService : BackgroundService
     {
         public LogSendingService(
-            ChannelReader<RequestLoggerOptions> channel, 
+            ChannelReader<HttpRequestAuditLogEntry> channel, 
             IHttpClientFactory httpClientFactory, 
             IOptions<RequestLoggerOptions> options,
             ILogger<LogSendingService> logger)
@@ -61,7 +62,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
         private const int DelayInSeconds = 5;
 
         
-        private readonly ChannelReader<RequestLoggerOptions> _channel;
+        private readonly ChannelReader<HttpRequestAuditLogEntry> _channel;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly RequestLoggerOptions _options;
         private readonly ILogger<LogSendingService> _logger;

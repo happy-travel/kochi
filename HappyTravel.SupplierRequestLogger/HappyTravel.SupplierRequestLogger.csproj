@@ -3,9 +3,9 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <Authors>Denis Nikolaev</Authors>
-        <Description>Logger requests to suppliers in ElasticSearch</Description>
+        <Description>fixed injected service</Description>
         <PackageProjectUrl>https://github.com/happy-travel/supplier-request-logger</PackageProjectUrl>
         <RepositoryURL>https://github.com/happy-travel/supplier-request-logger</RepositoryURL>
         <PackageReleaseNotes>Fixed wrong RequestBody value</PackageReleaseNotes>

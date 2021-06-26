@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTravel.SupplierRequestLogger", "HappyTravel.SupplierRequestLogger\HappyTravel.SupplierRequestLogger.csproj", "{55BB20DD-BE1D-4409-B95B-EFC6B5D1B173}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTravel.HttpRequestAuditLogger", "HappyTravel.HttpRequestAuditLogger\HappyTravel.HttpRequestAuditLogger.csproj", "{55BB20DD-BE1D-4409-B95B-EFC6B5D1B173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

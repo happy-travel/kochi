@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http.Headers;
 
-namespace HappyTravel.SupplierRequestLogger.Extensions
+namespace HappyTravel.HttpRequestAuditLogger.Extensions
 {
     public static class HeadersExtensions
     {

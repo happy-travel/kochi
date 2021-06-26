@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HappyTravel.SupplierRequestLogger.Models
+namespace HappyTravel.HttpRequestAuditLogger.Models
 {
     public record HttpRequestAuditLogEntry
     {

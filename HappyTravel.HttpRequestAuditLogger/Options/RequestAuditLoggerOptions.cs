@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace HappyTravel.SupplierRequestLogger.Options
+namespace HappyTravel.HttpRequestAuditLogger.Options
 {
     public class RequestAuditLoggerOptions
     {

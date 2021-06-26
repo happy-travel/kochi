@@ -3,12 +3,12 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using HappyTravel.SupplierRequestLogger.Extensions;
-using HappyTravel.SupplierRequestLogger.Models;
-using HappyTravel.SupplierRequestLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Models;
+using HappyTravel.HttpRequestAuditLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace HappyTravel.SupplierRequestLogger
+namespace HappyTravel.HttpRequestAuditLogger
 {
     public class AuditLoggingHandler : DelegatingHandler
     {

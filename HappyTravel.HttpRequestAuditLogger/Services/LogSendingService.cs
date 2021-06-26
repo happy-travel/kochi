@@ -5,23 +5,20 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using HappyTravel.SupplierRequestLogger.Models;
-using HappyTravel.SupplierRequestLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Models;
+using HappyTravel.HttpRequestAuditLogger.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 
-namespace HappyTravel.SupplierRequestLogger.Services
+namespace HappyTravel.HttpRequestAuditLogger.Services
 {
     public class LogSendingService : BackgroundService
     {
-        public LogSendingService(
-            ChannelReader<HttpRequestAuditLogEntry> channel, 
-            IHttpClientFactory httpClientFactory, 
-            IOptions<RequestLoggerOptions> options,
-            ILogger<LogSendingService> logger)
+        public LogSendingService(ChannelReader<HttpRequestAuditLogEntry> channel, IHttpClientFactory httpClientFactory, 
+            IOptions<RequestAuditLoggerOptions> options, ILogger<LogSendingService> logger)
         {
             _channel = channel;
             _httpClientFactory = httpClientFactory;
@@ -64,7 +61,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
         
         private readonly ChannelReader<HttpRequestAuditLogEntry> _channel;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly RequestLoggerOptions _options;
+        private readonly RequestAuditLoggerOptions _options;
         private readonly ILogger<LogSendingService> _logger;
     }
 }

@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Net.Http.Headers;
 
-namespace HappyTravel.SupplierRequestLogger.Extensions
+namespace HappyTravel.HttpRequestAuditLogger.Extensions
 {
     public static class HeadersExtensions
     {
-        public static Dictionary<string, string> ToDictionary(this HttpHeaders headers)
+        internal static Dictionary<string, string> ToDictionary(this HttpHeaders headers)
         {
             return headers.ToDictionary(h => h.Key, 
                 h => string.Join(";", h.Value));

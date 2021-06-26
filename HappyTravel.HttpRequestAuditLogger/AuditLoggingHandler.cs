@@ -3,16 +3,16 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using HappyTravel.SupplierRequestLogger.Extensions;
-using HappyTravel.SupplierRequestLogger.Models;
-using HappyTravel.SupplierRequestLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Models;
+using HappyTravel.HttpRequestAuditLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Extensions;
 using Microsoft.Extensions.Options;
 
-namespace HappyTravel.SupplierRequestLogger
+namespace HappyTravel.HttpRequestAuditLogger
 {
-    public class LoggingHandler : DelegatingHandler
+    public class AuditLoggingHandler : DelegatingHandler
     {
-        public LoggingHandler(ChannelWriter<HttpRequestAuditLogEntry> channel, IOptions<RequestLoggerOptions> options)
+        public AuditLoggingHandler(ChannelWriter<HttpRequestAuditLogEntry> channel, IOptions<RequestAuditLoggerOptions> options)
         {
             _channel = channel;
             _options = options.Value;
@@ -35,6 +35,7 @@ namespace HappyTravel.SupplierRequestLogger
             
             var logEntry = new HttpRequestAuditLogEntry
             {
+                Method = request.Method.Method,
                 Url = request.RequestUri?.AbsoluteUri ?? string.Empty,
                 RequestHeaders = request.Headers.ToDictionary(),
                 RequestBody = requestBody
@@ -69,6 +70,6 @@ namespace HappyTravel.SupplierRequestLogger
 
 
         private readonly ChannelWriter<HttpRequestAuditLogEntry> _channel;
-        private readonly RequestLoggerOptions _options;
+        private readonly RequestAuditLoggerOptions _options;
     }
 }

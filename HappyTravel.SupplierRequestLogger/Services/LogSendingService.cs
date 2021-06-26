@@ -17,11 +17,8 @@ namespace HappyTravel.SupplierRequestLogger.Services
 {
     public class LogSendingService : BackgroundService
     {
-        public LogSendingService(
-            ChannelReader<HttpRequestAuditLogEntry> channel, 
-            IHttpClientFactory httpClientFactory, 
-            IOptions<RequestLoggerOptions> options,
-            ILogger<LogSendingService> logger)
+        public LogSendingService(ChannelReader<HttpRequestAuditLogEntry> channel, IHttpClientFactory httpClientFactory, 
+            IOptions<RequestAuditLoggerOptions> options, ILogger<LogSendingService> logger)
         {
             _channel = channel;
             _httpClientFactory = httpClientFactory;
@@ -64,7 +61,7 @@ namespace HappyTravel.SupplierRequestLogger.Services
         
         private readonly ChannelReader<HttpRequestAuditLogEntry> _channel;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly RequestLoggerOptions _options;
+        private readonly RequestAuditLoggerOptions _options;
         private readonly ILogger<LogSendingService> _logger;
     }
 }

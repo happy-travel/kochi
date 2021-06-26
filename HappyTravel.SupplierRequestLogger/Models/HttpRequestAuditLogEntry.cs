@@ -4,7 +4,8 @@ namespace HappyTravel.SupplierRequestLogger.Models
 {
     public record HttpRequestAuditLogEntry
     {
-        public string Url { get; init; }
+        public string? Method { get; init; }
+        public string? Url { get; init; }
         public Dictionary<string, string>? RequestHeaders { get; init; }
         public Dictionary<string, string>? ResponseHeaders { get; init; }
         public string? RequestBody { get; init; }

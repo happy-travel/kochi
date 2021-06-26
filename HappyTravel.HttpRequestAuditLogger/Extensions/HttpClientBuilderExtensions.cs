@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Channels;
-using HappyTravel.SupplierRequestLogger.Models;
-using HappyTravel.SupplierRequestLogger.Options;
-using HappyTravel.SupplierRequestLogger.Services;
+using HappyTravel.HttpRequestAuditLogger.Models;
+using HappyTravel.HttpRequestAuditLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HappyTravel.SupplierRequestLogger.Extensions
+namespace HappyTravel.HttpRequestAuditLogger.Extensions
 {
     public static class HttpClientBuilderExtensions
     {

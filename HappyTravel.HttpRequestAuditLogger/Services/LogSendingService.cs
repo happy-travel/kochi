@@ -5,15 +5,15 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using HappyTravel.SupplierRequestLogger.Models;
-using HappyTravel.SupplierRequestLogger.Options;
+using HappyTravel.HttpRequestAuditLogger.Models;
+using HappyTravel.HttpRequestAuditLogger.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 
-namespace HappyTravel.SupplierRequestLogger.Services
+namespace HappyTravel.HttpRequestAuditLogger.Services
 {
     public class LogSendingService : BackgroundService
     {

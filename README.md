@@ -1,5 +1,5 @@
 # kochi
-Client for Fukuoka logging service.
+Client for Fukuoka audit logging service.
 
 ## Description
 Client integrated to HttpClient as a handler and sends logs to Fukuoka.
@@ -19,7 +19,7 @@ public class Startup
         # Read Fukuoka options from Vault
         var fukuokaOptions = vaultClient.Get(Configuration["Fukuoka:Options"]).GetAwaiter().GetResult(); 
         services.AddHttpClient("ClientName")
-            .AddHttpRequestLoggingHandler(options =>
+            .AddHttpRequestAudit(options =>
             {
                 # Set Fukuoka endpoint for client
                 options.Endpoint = fukuokaOptions["endpoint"];

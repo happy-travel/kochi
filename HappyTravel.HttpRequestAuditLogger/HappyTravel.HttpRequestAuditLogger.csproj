@@ -6,8 +6,8 @@
         <Version>1.2.0</Version>
         <Authors>Denis Nikolaev</Authors>
         <Description>Changed package naming</Description>
-        <PackageProjectUrl>https://github.com/happy-travel/supplier-request-logger</PackageProjectUrl>
-        <RepositoryURL>https://github.com/happy-travel/supplier-request-logger</RepositoryURL>
+        <PackageProjectUrl>https://github.com/happy-travel/http-request-audit-logger</PackageProjectUrl>
+        <RepositoryURL>https://github.com/happy-travel/http-request-audit-logger</RepositoryURL>
         <PackageReleaseNotes>Fixed wrong RequestBody value</PackageReleaseNotes>
     </PropertyGroup>
 
